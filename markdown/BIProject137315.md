@@ -1,52 +1,90 @@
+Business Intelligence Project
+================
+137315
+18-11-2023
+
+- [Student Details](#student-details)
+- [STEP 1 Loading the Dataset](#step-1-loading-the-dataset)
+- [STEP 2 Issue 1: Descriptive
+  Statistics](#step-2-issue-1-descriptive-statistics)
+- [STEP 3. Issue 2: Inferential Statistics -
+  ANOVA](#step-3-issue-2-inferential-statistics---anova)
+- [STEP 4. Issue 3: Basic Visualization - Univariate and Multivariate
+  Plots](#step-4-issue-3-basic-visualization---univariate-and-multivariate-plots)
+- [STEP 5. Issue 4: Preprocessing and Data
+  Transformation](#step-5-issue-4-preprocessing-and-data-transformation)
+- [STEP 6. Issue 5 for Milestone 3: Training the
+  Model](#step-6-issue-5-for-milestone-3-training-the-model)
+- [STEP 7. Issue 6 for Milestone 4: Hyper-Parameter Tuning and
+  Ensembles](#step-7-issue-6-for-milestone-4-hyper-parameter-tuning-and-ensembles)
+- [STEP 8. Issue 7 for Milestone 5:
+  Consolidation](#step-8-issue-7-for-milestone-5-consolidation)
+
+# Student Details
+
+|                                |                                                                  |
+|--------------------------------|------------------------------------------------------------------|
+| **Student ID Number and Name** | 137315 - Yashvi Bhadania                                         |
+| **Group**                      | C                                                                |
+| **Course Code**                | BBT4206                                                          |
+| **Course Name**                | Business Intelligence II                                         |
+| **Program**                    | Bachelor of Business Information Technology                      |
+| **Semester Duration**          | 16<sup>th</sup> October 2023 to 28<sup>th</sup> November 2023 \| |
+
+# STEP 1 Loading the Dataset
+
+``` r
 #Importing the dataset
 library(readr)
 Crop_recommendation <- read_csv("data/Crop_recommendation.csv")
 View(Crop_recommendation)
+```
 
+# STEP 2 Issue 1: Descriptive Statistics
 
-######## Issue 1: Descriptive Statistics ----
-
-# Load necessary libraries ----
+``` r
+# Load necessary libraries
 library(dplyr)
 
-# Measures of Frequency ----
+# Measures of Frequency
 frequency_table <- table(Crop_recommendation$label)
 print("Measures of Frequency:")
 print(frequency_table)
 
-# Measures of Central Tendency ----
+# Measures of Central Tendency
 central_tendency <- summary(Crop_recommendation[, c("N", "P", "K", "temperature", "humidity", "ph", "rainfall")])
 print("Measures of Central Tendency:")
 print(central_tendency)
 
-# Measures of Distribution ----
+# Measures of Distribution
 distribution <- sapply(Crop_recommendation[, c("N", "P", "K", "temperature", "humidity", "ph", "rainfall")], sd)
 print("Measures of Distribution:")
 print(distribution)
 
-# Measures of Relationship ----
+# Measures of Relationship
 correlation_matrix <- cor(Crop_recommendation[, c("N", "P", "K", "temperature", "humidity", "ph", "rainfall")])
 print("Measures of Relationship (Correlation Matrix):")
 print(correlation_matrix)
+```
 
-######## Issue 2: Inferential Statistics - ANOVA ----
+# STEP 3. Issue 2: Inferential Statistics - ANOVA
 
-# Example: One-way ANOVA to test if there are any significant differences in the 'N' values among different crops ----
+``` r
+# Example: One-way ANOVA to test if there are any significant differences in the 'N' values among different crops
 anova_result <- aov(N ~ label, data = Crop_recommendation)
 print("ANOVA Results:")
 print(summary(anova_result))
 
 # Note: This can be repeated for other variables (P, K, temperature, humidity, ph, rainfall) by changing the formula accordingly.
+```
 
+# STEP 4. Issue 3: Basic Visualization - Univariate and Multivariate Plots
 
-
-######## Issue 3: Basic Visualization: ----
-###Univariate Plots ----
-
-# Load necessary libraries ----
+``` r
+# Load necessary libraries
 library(ggplot2)
 
-# Univariate Plot for 'N' values ----
+# Univariate Plot for 'N' values
 ggplot(Crop_recommendation, aes(x = label, y = N)) +
   geom_boxplot(fill = "lightblue") +
   labs(title = "Boxplot of N values for each crop",
@@ -55,9 +93,7 @@ ggplot(Crop_recommendation, aes(x = label, y = N)) +
 
 # The above code can be repeated for other variables (P, K, temperature, humidity, ph, rainfall) to create univariate plots for each.
 
-###Multivariate Plots ----
-
-# Multivariate Plot for 'N' and 'P' values ----
+# Multivariate Plot for 'N' and 'P' values
 ggplot(Crop_recommendation, aes(x = N, y = P, color = label)) +
   geom_point() +
   labs(title = "Scatter plot of N vs P for each crop",
@@ -65,40 +101,40 @@ ggplot(Crop_recommendation, aes(x = N, y = P, color = label)) +
        y = "P Value")
 
 # The above code can be repeated for other combinations of variables to create multivariate plots.
+```
 
+# STEP 5. Issue 4: Preprocessing and Data Transformation
 
-
-######## Issue 4: Preprocessing and Data Transformation ----
-
-# Load necessary libraries ----
+``` r
+# Load necessary libraries
 library(tidyr)
 
-# Confirmation of the presence of missing values ----
+# Confirmation of the presence of missing values
 missing_values <- sum(is.na(Crop_recommendation))
 print(paste("Number of Missing Values:", missing_values))
 
-# Data imputation (not applicable but did for practice) ----
+# Data imputation (not applicable but did for practic)
 # For simplicity, let's impute missing values with the mean of each column
 Crop_recommendation_imputed <- Crop_recommendation %>%
   mutate_all(~ifelse(is.na(.), mean(., na.rm = TRUE), .))
 
-# Confirm that missing values are imputed ----
+# Confirm that missing values are imputed
 missing_values_after_imputation <- sum(is.na(Crop_recommendation_imputed))
 print(paste("Number of Missing Values After Imputation:", missing_values_after_imputation))
 
-# Data transformation (not applicable but did for practice) ----
+# Data transformation (not applicable but did for practice)
 # For example, you can log-transform the 'rainfall' variable
 Crop_recommendation_transformed <- Crop_recommendation_imputed %>%
   mutate(rainfall_log = log1p(rainfall))
 
-# Display the head of the transformed dataset ----
+# Display the head of the transformed dataset
 print("Head of the Transformed Dataset:")
 print(head(Crop_recommendation_transformed))
+```
 
+# STEP 6. Issue 5 for Milestone 3: Training the Model
 
-
-######## Issue 5 for Milestone 3: Training the Model ----
-
+``` r
 # Load necessary libraries ----
 library(caret)
 
@@ -217,10 +253,11 @@ xyplot(results, models = c("LDA", "CART"))
 diffs <- diff(results)
 
 summary(diffs)
+```
 
+# STEP 7. Issue 6 for Milestone 4: Hyper-Parameter Tuning and Ensembles
 
-######## Issue 6 for Milestone 4: Hyper-Parameter Tuning and Ensembles ----
-
+``` r
 # Data Splitting
 set.seed(123)
 index <- createDataPartition(Crop_recommendation$label, p = 0.8, list = FALSE)
@@ -275,9 +312,11 @@ ensemble_predictions <- ensemble_predict(ensemble_models, test_data)
 confusion_matrix <- confusionMatrix(ensemble_predictions, factor(test_data$label, levels = levels(ensemble_predictions)))
 print("Confusion Matrix:")
 print(confusion_matrix)
+```
 
-######## Issue 7 for Milestone 5: Consolidation ----
+# STEP 8. Issue 7 for Milestone 5: Consolidation
 
+``` r
 # We can create an API to access the model from outside R using a package
 # called Plumber.
 
@@ -319,4 +358,4 @@ api$run(host = "127.0.0.1", port = 5022)
 # for the arguments:
 # N, P, K, temperature, humidity, ph, rainfall
 # 45, 32, 24, 78, 22, 9, and 10 respectively should output "mango"
-
+```
